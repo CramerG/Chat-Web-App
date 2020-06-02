@@ -13,9 +13,10 @@ const io = require('socket.io')(server);
 var users = [];
 
 io.on("connection", socket => {
+
     socket.on("new_user_connecting", data => {
-        console.log(data);
         users.push(data);
+        socket.broadcast.emit("new_user_announcement",  data + " has joined the chat.");
     })
 
     socket.on("new_message_from_client", data => {
