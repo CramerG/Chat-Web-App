@@ -62,7 +62,13 @@ const Chat = props => {
                 return [...prevMessages, msg];
             })
         );
+        socket.on("new_user_announcement", msg => 
+            setMessages(prevMessages => {
+                return [...prevMessages, {user: "", msg: msg}];
+            })
+        )
     }, []);
+
 
     return(
         <div>

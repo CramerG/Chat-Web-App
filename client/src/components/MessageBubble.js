@@ -1,5 +1,5 @@
 import React from 'react';
-import {css, csx} from 'emotion';
+import {css} from 'emotion';
 
 const MessageBubble = props => {
     const msg = props.message.msg;
@@ -8,7 +8,6 @@ const MessageBubble = props => {
 
     var bgColor ="";
     var align = "";
-    var clear = "";
 
     if(msgSender === userName) {
         bgColor = "DarkGrey";
