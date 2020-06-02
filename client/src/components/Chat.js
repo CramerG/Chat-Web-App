@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
+import styles from '../styles/chat.css';
+import MessageBubble from './MessageBubble';
 
 const Chat = props => {
-    const userName = props.name;
+    const [userName, setUserName] = useState("");
+    const [hasSetName, setHasSetName] = useState(false);
     const [messages, setMessages] = useState([]);
     const [currMessage, setCurrMessage] = useState("");
     const [socket] = useState( () => io(":8000") );
@@ -10,34 +13,62 @@ const Chat = props => {
     const onSubmitHandler = e => {
         e.preventDefault();
         socket.emit("new_message_from_client", {user: userName, msg: currMessage});
+        setMessages([...messages, {user: userName, msg: currMessage}]);
         setCurrMessage("");
-    }
+    };
+
+    const onNameSubmitHandler = e => {
+        e.preventDefault();
+        socket.emit("new_user_connecting", userName);
+        setHasSetName(true);
+    };
+
+    const renderContent = () => {
+        if (hasSetName === false) {
+            return(
+                <div>
+                    <form onSubmit={onNameSubmitHandler}>
+                        <label>Name: </label>
+                        <input type="text" onChange={(e) => {
+                            setUserName(e.target.value);
+                            }}/>
+                        <input type="submit"/>
+                    </form>
+                </div>
+            );
+        } else {
+            return(
+                <div>
+                    <h3>{userName}</h3>
+                    <div className="messageWindow">
+                    {messages.map( (message, idx) => {
+                        return(
+                                <MessageBubble key={idx} message={message} user={userName}/>
+                        );
+                    } )}
+                    </div>
+                    <form onSubmit={onSubmitHandler} className="clearFix">
+                        <input type="text"  className="textWindow" onChange={ (e) => setCurrMessage(e.target.value) } value={currMessage}/>
+                        <input type="submit" className="chatButton" value="Send"/>
+                    </form>
+                 </div>
+            );
+        }
+    };
 
     useEffect( () => {
         socket.on("send_message_to_all_other_clients", msg => 
             setMessages(prevMessages => {
-                return [msg, ...prevMessages];
+                return [...prevMessages, msg];
             })
         );
-    })
+    }, []);
 
     return(
         <div>
-            <h3>{props.name}</h3>
-            {messages.map( (message, idx) => {
-                return(
-                    <div key={idx}>
-                        <h6>{message.user}</h6>
-                        <p>{message.msg}</p>
-                    </div>
-                
-                );
-            } )}
-            <form onSubmit={onSubmitHandler}>
-                <input type="text" onChange={ (e) => setCurrMessage(e.target.value) } value={currMessage}/>
-                <input type="submit" value="Send"/>
-            </form>
+                    {renderContent()}
         </div>
+
     );
 };
 

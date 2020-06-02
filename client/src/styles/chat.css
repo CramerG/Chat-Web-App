@@ -1,0 +1,19 @@
+.messageWindow{
+    width: 100%;
+    height: 400px;
+    overflow: auto;
+}
+
+.textWindow{
+    width: 350px;
+    height: 50px;
+}
+
+.chatButton{
+    width: 75px;
+    height: 50px;
+}
+
+.clearFix{
+    clear: both;
+}

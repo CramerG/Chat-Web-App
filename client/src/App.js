@@ -8,10 +8,8 @@ function App() {
   return (
     <div className="App">
       <h1>MERN Chat</h1>
-      <Router>
-        <Start path="/"/>
-        <Chat path="/chat/:name"/>
-      </Router>
+        <Chat/>
+ 
     </div>
   );
 }

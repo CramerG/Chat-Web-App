@@ -3,15 +3,31 @@ import {css, csx} from 'emotion';
 
 const MessageBubble = props => {
     const msg = props.message.msg;
-    const msgSender = props.message.name;
+    const msgSender = props.message.user;
     const userName = props.user;
+
+    var bgColor ="";
+    var align = "";
+    var clear = "";
+
+    if(msgSender === userName) {
+        bgColor = "DarkGrey";
+        align = "right";
+    } else {
+        bgColor = "LightBlue"
+        align = "left";
+    }
 
     return(
         <div className={css`
-            height: 25px;
-            width: 100px;
-            background-color: blue;
+            height: auto;
+            width: 300px;
+            padding: 5px;
+            background-color: ${bgColor};
+            float: ${align};
+            clear: both;
         `}>
+            <p>{msgSender}</p>
             <p>{msg}</p>
         </div>
     );
